@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TableContainer,
   Table,
@@ -19,11 +19,18 @@ import { dummyMyCollectionsData } from "../../data";
 import { animation } from "../../utils/animation";
 import SetCarForSaleModal from "../../Components/Modals/SetCarForSaleModal";
 
+import { toast } from "react-toastify";
+import FileStorageMarketplace from "../../CarMarketplace.json";
+import { ethers } from "ethers";
+import { useNavigate } from "react-router-dom";
+
 const MyCollections = () => {
   // const [editCarId, setEditCarId] = useState(null);
   // const [deleteCarId, setDeleteCarId] = useState(null);
 
+  const navigate = useNavigate();
   const [PriceCarId, setPriceCarId] = useState(null);
+  const [myCars, setMyCars] = useState([]);
 
   // const {
   //   isOpen: isEditCarModalOpen,
@@ -54,20 +61,60 @@ const MyCollections = () => {
   //   onDeleteCarModalOpen();
   // };
 
-  const handlePriceSetClick = (carId) => {
-    setPriceCarId(carId);
-    onPriceSetOpen();
+  const handlePriceSetClick = async (carId) => {
+    console.log("carId: ", Number(carId));
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const signer = provider.getSigner();
+
+    const contract = new ethers.Contract(
+      FileStorageMarketplace.address,
+      FileStorageMarketplace.abi,
+      signer
+    );
+
+    const carForSale = await contract.setCarForSale(carId);
+
+    const receipt = await carForSale.wait(); // Wait for the transaction to be mined
+
+    if (receipt.status === 1) {
+      // Transaction successful
+      toast.success("Car on sale now!");
+      navigate("/cars_for_sale");
+    } else {
+      // Transaction failed
+      toast.error("Transaction Failed");
+    }
   };
 
   const itemsPerPage = 10;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = dummyMyCollectionsData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const showPagination =
-    dummyMyCollectionsData.length > itemsPerPage ? true : false;
+  const currentItems = myCars.slice(indexOfFirstItem, indexOfLastItem);
+  const showPagination = myCars.length > itemsPerPage ? true : false;
+
+  useEffect(() => {
+    const FetchMyCars = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        FileStorageMarketplace.address,
+        FileStorageMarketplace.abi,
+        signer
+      );
+
+      const fetchCars = await contract.getMyCars();
+
+      console.log("fetchCars: ", fetchCars);
+
+      // Set the files state variable
+      setMyCars(fetchCars);
+    };
+
+    FetchMyCars();
+  }, []);
 
   return (
     <>
@@ -114,8 +161,8 @@ const MyCollections = () => {
                 currentItems.map((data, i) => (
                   <>
                     <Tr key={i}>
-                      <Td paddingY="15px">{data?.carId}</Td>
-                      <Td>{data?.carName}</Td>
+                      <Td paddingY="15px">{Number(data.carId)}</Td>
+                      <Td>{data?.name}</Td>
                       <Td>
                         <Link
                           fontWeight="light"
@@ -123,13 +170,13 @@ const MyCollections = () => {
                           //   onClick={() => click(data.carHash)}
                           isExternal
                         >
-                          {data.carHash.slice(0, 20) +
+                          {data.link.slice(0, 20) +
                             "..." +
-                            data.carHash.slice(-20)}{" "}
+                            data.link.slice(-20)}{" "}
                           <ExternalLinkIcon mx="2px" />
                         </Link>
                       </Td>
-                      <Td>{data?.carPrice}</Td>
+                      <Td>{ethers.utils.formatEther(data?.price)} ETH</Td>
                       <Td>
                         <Button
                           onClick={() => handlePriceSetClick(data?.carId)}
@@ -186,7 +233,7 @@ const MyCollections = () => {
         {showPagination && (
           <Pagination
             itemsPerPage={itemsPerPage}
-            totalItems={dummyMyCollectionsData.length}
+            totalItems={myCars.length}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />

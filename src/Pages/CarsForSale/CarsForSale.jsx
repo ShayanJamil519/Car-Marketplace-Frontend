@@ -1,25 +1,54 @@
+import React, { useState, useEffect } from "react";
 import Car from "../../Components/Navbar/CarsForSale/Car";
 import Pagination from "../../Components/Pagination/Pagination";
 import { dummyCarsData } from "../../data";
 import { SimpleGrid, Box, Text } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
-import { ethers } from "ethers";
-import { useState } from "react";
 import { animation } from "../../utils/animation";
+import { toast } from "react-toastify";
+import FileStorageMarketplace from "../../CarMarketplace.json";
+import { ethers } from "ethers";
+import { useNavigate } from "react-router-dom";
 
 const CarsForSale = () => {
   //   const [carsForSale, setCarsForSale] = useState([]);
+  const navigate = useNavigate();
+  const [carForSales, setCarForSales] = useState([]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = dummyCarsData.slice(indexOfFirstItem, indexOfLastItem);
-  console.log({ dummyCarsData });
-  console.log({ currentItems });
+  const currentItems = carForSales.slice(indexOfFirstItem, indexOfLastItem);
+  // console.log({ dummyCarsData });
+  // console.log({ currentItems });
 
-  const showPagination = dummyCarsData.length > itemsPerPage ? true : false;
+  const showPagination = carForSales.length > itemsPerPage ? true : false;
+
+  useEffect(() => {
+    const FetchCarsForSale = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        FileStorageMarketplace.address,
+        FileStorageMarketplace.abi,
+        signer
+      );
+
+      const fetchCars = await contract.getCarsForSale();
+
+      console.log("fetchCars: ", fetchCars);
+
+      // Set the files state variable
+      setCarForSales(fetchCars);
+    };
+
+    FetchCarsForSale();
+  }, []);
 
   return (
     <Box backgroundColor="#fffae5">
@@ -64,7 +93,7 @@ const CarsForSale = () => {
                   carDescription={data.description}
                   //   carOwner={data.owner.toString()}
                   carOwner={data.owner}
-                  carHash={data.owner}
+                  carHash={data.link}
                   //   carPrice={ethers.utils.formatEther(data.price).toString()}
                   carPrice={data.price}
                   onOpen={onOpen}
@@ -76,7 +105,7 @@ const CarsForSale = () => {
           {showPagination && (
             <Pagination
               itemsPerPage={itemsPerPage}
-              totalItems={dummyCarsData.length}
+              totalItems={carForSales.length}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
             />

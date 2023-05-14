@@ -14,6 +14,7 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import DeleteCarModal from "../../Modals/DeleteCarModal";
 import EditCarModal from "../../Modals/EditCarModal";
+import { ethers } from "ethers";
 
 const Car = (props) => {
   const [editCarId, setEditCarId] = useState(null);
@@ -33,11 +34,17 @@ const Car = (props) => {
   const handleEditClick = (carId) => {
     setEditCarId(carId);
     onEditCarModalOpen();
+    console.log("carId: ", Number(carId));
   };
 
   const handleDeleteClick = (carId) => {
     setDeleteCarId(carId);
     onDeleteCarModalOpen();
+  };
+
+  const handleBuy = (carId, carPrice) => {
+    console.log("carId: ", Number(carId));
+    console.log("carPrice: ", Number(carPrice));
   };
 
   const {
@@ -65,7 +72,7 @@ const Car = (props) => {
         justifyContent="space-between"
         marginBottom="-1.5em"
       >
-        <Heading size="md"> Car id # {carId}</Heading>
+        <Heading size="md"> Car id # {Number(carId)}</Heading>
       </CardHeader>
       <CardBody paddingBottom="0">
         <Text textAlign="left" marginBottom="0.5em">
@@ -122,7 +129,7 @@ const Car = (props) => {
             {" "}
             Price:{" "}
           </Text>
-          {carPrice} ETH
+          {ethers.utils.formatEther(carPrice)} ETH
         </Text>
       </CardBody>
       <CardFooter display={"flex"} flexDirection={"column"} gap={"10px"}>
@@ -135,7 +142,7 @@ const Car = (props) => {
           _hover={{
             backgroundColor: "blackAlpha.800",
           }}
-          // onClick={() => handleBuy(carId, carPrice)}
+          onClick={() => handleBuy(carId, carPrice)}
         >
           Buy Car
         </Button>
