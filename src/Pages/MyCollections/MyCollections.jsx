@@ -18,6 +18,7 @@ import Pagination from "../../Components/Pagination/Pagination";
 import { dummyMyCollectionsData } from "../../data";
 import DeleteCarModal from "../../Components/Modals/DeleteCarModal";
 import EditCarModal from "../../Components/Modals/EditCarModal";
+import { animation } from "../../utils/animation";
 
 const MyCollections = () => {
   const [editCarId, setEditCarId] = useState(null);
@@ -64,11 +65,12 @@ const MyCollections = () => {
         minHeight={"90vh"}
       >
         <Text
-          mb={"2"}
+          mb={"25px"}
           fontSize={{ base: "3xl", md: "5xl" }}
           textAlign="center"
           textTransform="uppercase"
-          textColor="#0d8775"
+          textColor="#ff9b2f"
+          animation={` ${animation} 0.8s ease-out`}
         >
           My Collections
         </Text>

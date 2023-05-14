@@ -5,6 +5,7 @@ import { SimpleGrid, Box, Text } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useState } from "react";
+import { animation } from "../../utils/animation";
 
 const CarsForSale = () => {
   //   const [carsForSale, setCarsForSale] = useState([]);
@@ -21,13 +22,15 @@ const CarsForSale = () => {
   const showPagination = dummyCarsData.length > itemsPerPage ? true : false;
 
   return (
-    <>
-      <Box backgroundColor="#f2fffe" paddingTop="3em">
+    <Box backgroundColor="#fffae5">
+      <Box paddingTop="3em">
         <Text
-          fontSize={{ base: "4xl", md: "5xl" }}
+          mb={"25px"}
+          fontSize={{ base: "3xl", md: "5xl" }}
           textAlign="center"
           textTransform="uppercase"
           textColor="#ff9b2f"
+          animation={` ${animation} 0.8s ease-out`}
         >
           Cars for sale
         </Text>
@@ -47,10 +50,10 @@ const CarsForSale = () => {
           <SimpleGrid
             spacing={10}
             templateColumns="repeat(auto-fill, minmax(320px, 1fr))"
-            paddingTop={12}
+            paddingTop={5}
             paddingBottom={5}
             paddingX={{ base: "1em", md: "5em" }}
-            backgroundColor="#f2fffe"
+            // backgroundColor="#fffae5"
           >
             {currentItems.map((data, i) => (
               <Box key={i}>
@@ -80,7 +83,7 @@ const CarsForSale = () => {
           )}
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 

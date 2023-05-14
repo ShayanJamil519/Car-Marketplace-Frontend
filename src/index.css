@@ -9,13 +9,13 @@ body {
 
 /* Hide the vertical scrollbar */
 body::-webkit-scrollbar {
-  width: 0.5em;
+  width: 0em;
 }
 
-body::-webkit-scrollbar-track {
+/* body::-webkit-scrollbar-track {
   background-color: #f5f5f5;
 }
 
 body::-webkit-scrollbar-thumb {
   background-color: #ff9b2f;
-}
+} */

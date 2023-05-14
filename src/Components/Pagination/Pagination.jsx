@@ -18,12 +18,13 @@ const Pagination = ({
       <ButtonGroup spacing="2">
         {pageNumbers.map((number) => (
           <Button
-            padding={5}
+            fontSize="lg"
+            padding={6}
             key={number}
-            bg={currentPage === number ? "black" : "white"}
-            color={currentPage === number ? "white" : "black"}
-            _hover={{ bg: currentPage === number ? "black" : "gray.200" }}
-            _active={{ bg: currentPage === number ? "black" : "gray.300" }}
+            bg={currentPage === number ? "black" : "#ff9b2f"}
+            color={currentPage === number ? "white" : "white"}
+            _hover={{ bg: currentPage === number ? "black" : "#e38a2b" }}
+            _active={{ bg: currentPage === number ? "black" : "#e38a2b" }}
             isActive={currentPage === number}
             onClick={() => setCurrentPage(number)}
           >

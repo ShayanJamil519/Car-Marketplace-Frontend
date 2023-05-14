@@ -5,6 +5,8 @@ import {
   IconButton,
   useDisclosure,
   Stack,
+  Image,
+  Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
@@ -15,7 +17,7 @@ import { useContext } from "react";
 
 const Links = [
   {
-    linkText: "Cars For File",
+    linkText: "Cars For Sale",
     linkUrl: "/cars_for_sale",
   },
   {
@@ -38,7 +40,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Box bg="#fdfdfd" px={{ base: "0.5em", md: "5em" }} boxShadow="sm">
+      <Box bg="#fffaf4" px={{ base: "0.5em", md: "5em" }} boxShadow="sm">
         <Flex
           h={20}
           alignItems={"center"}
@@ -55,10 +57,25 @@ export default function Navbar() {
           <HStack spacing={{ base: 1, md: 8 }} alignItems={"center"}>
             <Box
               fontWeight="bold"
-              fontSize={{ base: "lg", md: "3xl" }}
-              marginRight={{ base: "0em", md: "1em" }}
+              fontSize={{ base: "lg", md: "lg" }}
+              marginRight={{ base: "0em", md: "2em" }}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
             >
-              <Link to="/">Car Marketplace </Link>
+              <Link to="/" textColor="#ff9b2f">
+                <Image
+                  objectFit="contain"
+                  alt={"Logo"}
+                  align={"center"}
+                  w={"80px"}
+                  h={"50px"}
+                  src={"/navbar__logo.png"}
+                />{" "}
+              </Link>
+              <Link to={"/"}>
+                <Text fontFamily="cursive"> Car Marketplace</Text>
+              </Link>
             </Box>
 
             {isLoggedIn && (

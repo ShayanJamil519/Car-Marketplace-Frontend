@@ -47,11 +47,12 @@ export default function Hero() {
             </Text>
           </Heading>
           <Text color={"gray.500"}>
-            Introducing our revolutionary decentralized file storage system -
-            the ultimate solution for secure and immutable data storage.
-            Utilizing blockchain technology, users can store their files with
-            confidence, knowing that their data is tamper-proof and protected by
-            state-of-the-art security measures.
+            At our car marketplace, we've made buying and selling cars easier
+            than ever before. With a range of features that make it simple to
+            manage your listings and find the perfect car, our platform is the
+            ultimate destination for car enthusiasts.Experience a hassle-free
+            car buying and selling journey with our user-friendly platform. Sign
+            up today and start your car-selling journey with us!
           </Text>
           <Stack
             spacing={{ base: 4, sm: 6 }}

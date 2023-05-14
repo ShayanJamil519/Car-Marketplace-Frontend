@@ -7,11 +7,12 @@ import {
   Checkbox,
   Stack,
   Button,
-  Heading,
+  Text,
 } from "@chakra-ui/react";
 import { AuthContext } from "../../utils/AuthProvider";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { animation } from "../../utils/animation";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,24 +26,25 @@ export default function Login() {
 
   return (
     <Flex
-      minH={"75vh"}
+      minH={"90vh"}
       align={"center"}
       justify={"center"}
-      fontFamily={"sans-serif"}
-      bg="#f2fffe"
+      direction="column"
+      backgroundColor="#fffae5"
     >
-      <Stack spacing={8} mx={"auto"} minW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading
-            fontSize={"5xl"}
-            textTransform={"uppercase"}
-            fontFamily={"auto"}
-            textColor="#0d8775"
-            fontWeight="semi-bold"
-          >
-            Log in
-          </Heading>
-        </Stack>
+      <Stack align={"center"}>
+        <Text
+          mb={"10px"}
+          fontSize={{ base: "3xl", md: "5xl" }}
+          textAlign="center"
+          textTransform="uppercase"
+          textColor="#ff9b2f"
+          animation={` ${animation} 0.8s ease-out`}
+        >
+          Login to your account
+        </Text>
+      </Stack>
+      <Stack spacing={8} mx={"auto"} minW={"lg"} py={5} px={6}>
         <Box
           rounded={"lg"}
           boxShadow={"lg"}

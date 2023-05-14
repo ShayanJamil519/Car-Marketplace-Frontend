@@ -1,19 +1,21 @@
 import { Link } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
 
 const NavLink = ({ data }) => (
-  <Link
-    px={4}
+  <Box
+    as={Link}
+    // px={2}
     py={1}
     fontSize="xl"
-    rounded={"md"}
+    position="relative"
+    to={data.linkUrl}
     _hover={{
       textDecoration: "none",
-      textColor: "black",
+      textColor: "#ff9b2f",
     }}
-    to={data.linkUrl}
   >
     {data.linkText}
-  </Link>
+  </Box>
 );
 
 export default NavLink;

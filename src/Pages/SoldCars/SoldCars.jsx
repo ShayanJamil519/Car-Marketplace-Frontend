@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   TableContainer,
   Table,
@@ -15,6 +16,7 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Pagination from "../../Components/Pagination/Pagination";
 import { dummySoldCarsData } from "../../data";
+import { animation } from "../../utils/animation";
 
 const SoldCars = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,11 +39,12 @@ const SoldCars = () => {
         minHeight={"90vh"}
       >
         <Text
-          mb={"2"}
+          mb={"25px"}
           fontSize={{ base: "3xl", md: "5xl" }}
           textAlign="center"
           textTransform="uppercase"
-          textColor="#0d8775"
+          textColor="#ff9b2f"
+          animation={` ${animation} 0.8s ease-out`}
         >
           All Sold Cars
         </Text>

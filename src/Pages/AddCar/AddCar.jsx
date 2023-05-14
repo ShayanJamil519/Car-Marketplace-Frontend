@@ -11,6 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { animation } from "../../utils/animation";
 
 export default function AddCar() {
   return (
@@ -20,15 +21,17 @@ export default function AddCar() {
       justify={"center"}
       flexDirection={"column"}
       paddingTop={6}
-      bg="#f2fffe"
+      backgroundColor="#fffae5"
     >
       <Text
-        fontSize={{ base: "4xl", md: "5xl" }}
-        textColor="#0d8775"
+        mb={"10px"}
+        fontSize={{ base: "3xl", md: "5xl" }}
         textAlign="center"
         textTransform="uppercase"
+        textColor="#ff9b2f"
+        animation={` ${animation} 0.8s ease-out`}
       >
-        Add your Car
+        Add your car
       </Text>
       <Stack
         spacing={{ base: 1, md: 8 }}

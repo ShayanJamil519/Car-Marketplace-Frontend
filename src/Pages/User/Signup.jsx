@@ -16,6 +16,7 @@ import { useContext, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../utils/AuthProvider";
+import { animation } from "../../utils/animation";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -31,24 +32,25 @@ export default function Signup() {
 
   return (
     <Flex
-      minH={"90vh"}
+      minH={"100vh"}
+      direction="column"
       align={"center"}
       justify={"center"}
-      fontFamily={"sans-serif"}
-      bg="#f2fffe"
+      backgroundColor="#fffae5"
     >
-      <Stack spacing={8} mx={"auto"} minW={"lg"} py={10} px={6}>
-        <Stack align={"center"}>
-          <Heading
-            fontSize={"5xl"}
-            fontWeight="semi-bold"
-            textAlign={"center"}
-            fontFamily={"auto"}
-            textColor="#0d8775"
-          >
-            CREATE ACCOUNT
-          </Heading>
-        </Stack>
+      <Stack align={"center"}>
+        <Text
+          mb={"10px"}
+          fontSize={{ base: "3xl", md: "5xl" }}
+          textAlign="center"
+          textTransform="uppercase"
+          textColor="#ff9b2f"
+          animation={` ${animation} 0.8s ease-out`}
+        >
+          Create your account
+        </Text>
+      </Stack>
+      <Stack spacing={8} mx={"auto"} minW={"lg"} py={5} px={6}>
         <Box
           rounded={"lg"}
           bg={useColorModeValue("white", "gray.700")}

@@ -36,11 +36,11 @@ export default function EditCarModal(props) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <FormControl id="text">
+            <FormControl id="text" marginBottom="10px">
               <FormLabel fontWeight="bold">Name</FormLabel>
               <Input type="text" placeholder="Enter car name" />
             </FormControl>
-            <FormControl id="number">
+            <FormControl id="number" marginBottom="10px">
               <FormLabel fontWeight="bold">Price</FormLabel>
               <Input
                 type="number"
@@ -61,7 +61,7 @@ export default function EditCarModal(props) {
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3}>
-              Set For Sale
+              Edit Details
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>
