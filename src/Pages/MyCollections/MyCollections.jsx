@@ -16,35 +16,47 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Pagination from "../../Components/Pagination/Pagination";
 import { dummyMyCollectionsData } from "../../data";
-import DeleteCarModal from "../../Components/Modals/DeleteCarModal";
-import EditCarModal from "../../Components/Modals/EditCarModal";
 import { animation } from "../../utils/animation";
+import SetCarForSaleModal from "../../Components/Modals/SetCarForSaleModal";
 
 const MyCollections = () => {
-  const [editCarId, setEditCarId] = useState(null);
-  const [deleteCarId, setDeleteCarId] = useState(null);
+  // const [editCarId, setEditCarId] = useState(null);
+  // const [deleteCarId, setDeleteCarId] = useState(null);
+
+  const [PriceCarId, setPriceCarId] = useState(null);
+
+  // const {
+  //   isOpen: isEditCarModalOpen,
+  //   onOpen: onEditCarModalOpen,
+  //   onClose: onEditCarModalClose,
+  // } = useDisclosure();
+  // const {
+  //   isOpen: isDeleteCarModalOpen,
+  //   onOpen: onDeleteCarModalOpen,
+  //   onClose: onDeleteCarModalClose,
+  // } = useDisclosure();
 
   const {
-    isOpen: isEditCarModalOpen,
-    onOpen: onEditCarModalOpen,
-    onClose: onEditCarModalClose,
-  } = useDisclosure();
-  const {
-    isOpen: isDeleteCarModalOpen,
-    onOpen: onDeleteCarModalOpen,
-    onClose: onDeleteCarModalClose,
+    isOpen: isPriceSetOpen,
+    onOpen: onPriceSetOpen,
+    onClose: onPriceSetClose,
   } = useDisclosure();
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const handleEditClick = (carId) => {
-    setEditCarId(carId);
-    onEditCarModalOpen();
-  };
+  // const handleEditClick = (carId) => {
+  //   setEditCarId(carId);
+  //   onEditCarModalOpen();
+  // };
 
-  const handleDeleteClick = (carId) => {
-    setDeleteCarId(carId);
-    onDeleteCarModalOpen();
+  // const handleDeleteClick = (carId) => {
+  //   setDeleteCarId(carId);
+  //   onDeleteCarModalOpen();
+  // };
+
+  const handlePriceSetClick = (carId) => {
+    setPriceCarId(carId);
+    onPriceSetOpen();
   };
 
   const itemsPerPage = 10;
@@ -120,29 +132,16 @@ const MyCollections = () => {
                       <Td>{data?.carPrice}</Td>
                       <Td>
                         <Button
-                          onClick={() => handleEditClick(data?.carId)}
+                          onClick={() => handlePriceSetClick(data?.carId)}
                           colorScheme="teal"
                           backgroundColor="black"
                           size="md"
-                          minWidth="100px"
                           marginRight={"40px"}
                           _hover={{
                             backgroundColor: "blackAlpha.800",
                           }}
                         >
-                          Edit
-                        </Button>
-
-                        <Button
-                          onClick={() => handleDeleteClick(data?.carId)}
-                          colorScheme="red"
-                          minWidth="100px"
-                          size="md"
-                          _hover={{
-                            backgroundColor: "red.400",
-                          }}
-                        >
-                          Delete
+                          Set Car For Sale
                         </Button>
                       </Td>
                     </Tr>
@@ -154,22 +153,32 @@ const MyCollections = () => {
         </TableContainer>
 
         {/* Edit Card Modal */}
-        {editCarId && (
+        {/* {editCarId && (
           <EditCarModal
             isOpen={isEditCarModalOpen}
             onOpen={onEditCarModalOpen}
             onClose={onEditCarModalClose}
             carId={editCarId}
           />
-        )}
+        )} */}
 
         {/* Delete Card Modal */}
-        {deleteCarId && (
+        {/* {deleteCarId && (
           <DeleteCarModal
             isOpen={isDeleteCarModalOpen}
             onOpen={onDeleteCarModalOpen}
             onClose={onDeleteCarModalClose}
             carId={deleteCarId}
+          />
+        )} */}
+
+        {/* Price Set Card Modal */}
+        {PriceCarId && (
+          <SetCarForSaleModal
+            isOpen={isPriceSetOpen}
+            onOpen={onPriceSetOpen}
+            onClose={onPriceSetClose}
+            carId={PriceCarId}
           />
         )}
 

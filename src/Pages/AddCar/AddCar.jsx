@@ -60,18 +60,7 @@ export default function AddCar() {
                 //   }
               />
             </FormControl>
-            <FormControl id="number">
-              <FormLabel fontWeight="bold">Price</FormLabel>
-              <Input
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="Enter price in ETH"
-                //   onChange={(e) =>
-                //     setFileInfo({ ...fileInfo, name: e.target.value })
-                //   }
-              />
-            </FormControl>
+
             <FormControl id="text">
               <FormLabel fontWeight="bold">Description</FormLabel>
               <Textarea

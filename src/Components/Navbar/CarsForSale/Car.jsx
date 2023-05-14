@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -8,11 +9,37 @@ import {
   Text,
   CardFooter,
   Image,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import React from "react";
+import DeleteCarModal from "../../Modals/DeleteCarModal";
+import EditCarModal from "../../Modals/EditCarModal";
 
 const Car = (props) => {
+  const [editCarId, setEditCarId] = useState(null);
+  const [deleteCarId, setDeleteCarId] = useState(null);
+
+  const {
+    isOpen: isEditCarModalOpen,
+    onOpen: onEditCarModalOpen,
+    onClose: onEditCarModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteCarModalOpen,
+    onOpen: onDeleteCarModalOpen,
+    onClose: onDeleteCarModalClose,
+  } = useDisclosure();
+
+  const handleEditClick = (carId) => {
+    setEditCarId(carId);
+    onEditCarModalOpen();
+  };
+
+  const handleDeleteClick = (carId) => {
+    setDeleteCarId(carId);
+    onDeleteCarModalOpen();
+  };
+
   const {
     onOpen,
     carId,
@@ -98,7 +125,7 @@ const Car = (props) => {
           {carPrice} ETH
         </Text>
       </CardBody>
-      <CardFooter>
+      <CardFooter display={"flex"} flexDirection={"column"} gap={"10px"}>
         <Button
           marginX="auto"
           backgroundColor="black"
@@ -112,7 +139,51 @@ const Car = (props) => {
         >
           Buy Car
         </Button>
+        <Button
+          onClick={() => handleEditClick(carId)}
+          colorScheme="teal"
+          backgroundColor="#2f79c5"
+          size="md"
+          width="100%"
+          marginRight={"40px"}
+          _hover={{
+            backgroundColor: "#267ed9",
+          }}
+        >
+          Edit
+        </Button>
+
+        <Button
+          onClick={() => handleDeleteClick(carId)}
+          colorScheme="red"
+          width="100%"
+          size="md"
+          _hover={{
+            backgroundColor: "red.400",
+          }}
+        >
+          Remove
+        </Button>
       </CardFooter>
+      {/* Edit Card Modal */}
+      {editCarId && (
+        <EditCarModal
+          isOpen={isEditCarModalOpen}
+          onOpen={onEditCarModalOpen}
+          onClose={onEditCarModalClose}
+          carId={editCarId}
+        />
+      )}
+
+      {/* Delete Card Modal */}
+      {deleteCarId && (
+        <DeleteCarModal
+          isOpen={isDeleteCarModalOpen}
+          onOpen={onDeleteCarModalOpen}
+          onClose={onDeleteCarModalClose}
+          carId={deleteCarId}
+        />
+      )}
     </Card>
   );
 };
