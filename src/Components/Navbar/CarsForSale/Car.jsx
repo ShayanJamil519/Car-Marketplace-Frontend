@@ -16,7 +16,12 @@ import DeleteCarModal from "../../Modals/DeleteCarModal";
 import EditCarModal from "../../Modals/EditCarModal";
 import { ethers } from "ethers";
 
+import { toast } from "react-toastify";
+import FileStorageMarketplace from "../../../CarMarketplace.json";
+import { useNavigate } from "react-router-dom";
+
 const Car = (props) => {
+  const navigate = useNavigate();
   const [editCarId, setEditCarId] = useState(null);
   const [deleteCarId, setDeleteCarId] = useState(null);
 
@@ -42,9 +47,37 @@ const Car = (props) => {
     onDeleteCarModalOpen();
   };
 
-  const handleBuy = (carId, carPrice) => {
+  const handleBuy = async (carId, carPrice) => {
     console.log("carId: ", Number(carId));
     console.log("carPrice: ", Number(carPrice));
+    let price = ethers.utils.formatEther(carPrice).toString();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const signer = provider.getSigner();
+
+    const contract = new ethers.Contract(
+      FileStorageMarketplace.address,
+      FileStorageMarketplace.abi,
+      signer
+    );
+
+    carPrice = ethers.utils.parseEther(price);
+    const walletAddress = await signer.getAddress();
+
+    const tx = await contract.buyCar(carId, {
+      from: walletAddress,
+      value: carPrice._hex,
+    });
+
+    const receipt = await tx.wait();
+    if (receipt.status === 1) {
+      // Transaction successful
+      toast.success("Car details edited!");
+      navigate("/my_collections");
+    } else {
+      // Transaction failed
+      toast.error("Transaction Failed");
+    }
   };
 
   const {

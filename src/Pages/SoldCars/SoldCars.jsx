@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   TableContainer,
@@ -12,24 +12,54 @@ import {
   useDisclosure,
   Box,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Pagination from "../../Components/Pagination/Pagination";
 import { dummySoldCarsData } from "../../data";
 import { animation } from "../../utils/animation";
 
+import { toast } from "react-toastify";
+import FileStorageMarketplace from "../../CarMarketplace.json";
+import { ethers } from "ethers";
+import { useNavigate } from "react-router-dom";
+
 const SoldCars = () => {
+  const navigate = useNavigate();
+
+  const [soldCars, setSoldCars] = useState([]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 10;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = dummySoldCarsData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const showPagination = dummySoldCarsData.length > itemsPerPage ? true : false;
+  const currentItems = soldCars.slice(indexOfFirstItem, indexOfLastItem);
+  const showPagination = soldCars.length > itemsPerPage ? true : false;
+
+  useEffect(() => {
+    const FetchSoldCars = async () => {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        FileStorageMarketplace.address,
+        FileStorageMarketplace.abi,
+        signer
+      );
+
+      const soldCars = await contract.getAllSoldFile();
+
+      console.log("soldCars: ", soldCars);
+
+      // Set the files state variable
+      setSoldCars(soldCars);
+    };
+
+    FetchSoldCars();
+  }, []);
 
   return (
     <>
@@ -77,8 +107,8 @@ const SoldCars = () => {
                 currentItems.map((data, i) => (
                   <>
                     <Tr key={i}>
-                      <Td paddingY="15px">{data?.carId}</Td>
-                      <Td>{data?.carName}</Td>
+                      <Td paddingY="15px">{Number(data?.carId)}</Td>
+                      <Td>{data?.name}</Td>
                       <Td>
                         <Link
                           fontWeight="light"
@@ -86,21 +116,20 @@ const SoldCars = () => {
                           //   onClick={() => click(data.carHash)}
                           isExternal
                         >
-                          {data.carHash.slice(0, 20) +
+                          {data.link.slice(0, 20) +
                             "..." +
-                            data.carHash.slice(-20)}{" "}
+                            data.link.slice(-20)}{" "}
                           <ExternalLinkIcon mx="2px" />
                         </Link>
                       </Td>
-                      <Td>{data?.carPrice}</Td>
-                      <Td>{`${data?.carOwner?.slice(
+                      <Td>{ethers.utils.formatEther(data?.price)}</Td>
+                      <Td>{`${data?.owner?.slice(
                         0,
                         16
-                      )}....${data?.carOwner?.slice(-8)}`}</Td>
-                      <Td>{`${data?.carOldOwner?.slice(
-                        0,
-                        16
-                      )}....${data?.carOldOwner?.slice(-8)}`}</Td>
+                      )}....${data?.owner?.slice(-8)}`}</Td>
+                      {data.oldOwner.map((dat, i) => (
+                        <Td>{dat}</Td>
+                      ))}
                     </Tr>
                   </>
                 ))
@@ -111,7 +140,7 @@ const SoldCars = () => {
         {showPagination && (
           <Pagination
             itemsPerPage={itemsPerPage}
-            totalItems={dummySoldCarsData.length}
+            totalItems={soldCars.length}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
@@ -122,3 +151,8 @@ const SoldCars = () => {
 };
 
 export default SoldCars;
+
+// <Td>{`${data?.oldOwner[0]?.slice(
+//                         0,
+//                         16
+//                       )}....${data?.oldOwner[0]?.slice(-8)}`}</Td>
