@@ -30,8 +30,6 @@ export default function EditCarModal(props) {
   let [price, setPrice] = useState(0);
 
   const handleEditCar = async () => {
-    // console.log({ name, description, price: ethers.utils.parseEther(price) });
-
     price = ethers.utils.parseEther(price);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
 

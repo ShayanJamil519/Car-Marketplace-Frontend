@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   FormControl,
@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 export default function SetCarForSaleModal(props) {
-  const { isOpen, onOpen, onClose, carId } = props;
+  const { isOpen, onClose } = props;
 
   return (
     <>

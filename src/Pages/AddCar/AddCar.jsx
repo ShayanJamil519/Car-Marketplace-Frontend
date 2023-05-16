@@ -20,6 +20,7 @@ import FileStorageMarketplace from "../../CarMarketplace.json";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 
+// Infura Credentials
 const projectId = "2NeEZqOeOOi9fQgDL6VoIMwKIZY";
 const projectSecret = "b4ae65044a6e29c52c4091bf29a976b2";
 const auth =
@@ -47,17 +48,15 @@ export default function AddCar() {
 
   const handleFileUpload = async () => {
     try {
-      const added = await ipfs.add(selectedFile);
+      const added = await ipfs.add(selectedFile); // adding car image hash to ipfs
       fileInfo.link = added.path;
       fileInfo.price = ethers.utils.parseEther(fileInfo.price);
       setFileInfo({
         ...fileInfo,
         link: fileInfo.link,
       });
-      console.log(`https://gateway.pinata.cloud/ipfs/${fileInfo.link}`);
 
-      console.log("fileInfo: ", fileInfo);
-
+      // Connecting to Blockchain
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(
@@ -65,7 +64,7 @@ export default function AddCar() {
         FileStorageMarketplace.abi,
         signer
       );
-
+      // Calling Smart Contrat Function
       const tx = await contract.uploadCar(
         fileInfo.name,
         fileInfo.description,
@@ -75,11 +74,9 @@ export default function AddCar() {
       const receipt = await tx.wait(); // Wait for the transaction to be mined
 
       if (receipt.status === 1) {
-        // Transaction successful
         toast.success("File Uploaded Successfully");
         navigate("/my_collections");
       } else {
-        // Transaction failed
         toast.error("File Upload Failed");
       }
     } catch (error) {

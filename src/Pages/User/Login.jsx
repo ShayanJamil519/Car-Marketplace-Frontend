@@ -10,16 +10,26 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { AuthContext } from "../../utils/AuthProvider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { animation } from "../../utils/animation";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleAuthentication = (event) => {
     event.preventDefault();
+
+    // If any field is left it will throw error
+    if (!email || !password) {
+      toast.error("Please enter all fields");
+      return;
+    }
+
     login();
     navigate("/");
   };
@@ -56,11 +66,19 @@ export default function Login() {
           <Stack spacing={4}>
             <FormControl id="email" isRequired>
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </FormControl>
             <Stack spacing={10}>
               <Stack

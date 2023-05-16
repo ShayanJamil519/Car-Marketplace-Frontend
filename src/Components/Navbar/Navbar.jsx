@@ -14,7 +14,9 @@ import NavLink from "./NavLink";
 import NavButtons from "./NavButtons";
 import { AuthContext } from "../../utils/AuthProvider";
 import { useContext } from "react";
+import { ConnectWallet } from "@thirdweb-dev/react";
 
+// Links array
 const Links = [
   {
     linkText: "Cars For Sale",
@@ -36,7 +38,7 @@ const Links = [
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { isLoggedIn, logout } = useContext(AuthContext); // getting loggedin state from auth context
 
   return (
     <>
@@ -96,6 +98,18 @@ export default function Navbar() {
               isLoggedIn={isLoggedIn}
               logout={logout}
             />
+            {isLoggedIn && (
+              <ConnectWallet
+                accentColor="#f213a4"
+                colorMode="dark"
+                width={{ base: "150px", md: "unset" }}
+                style={{
+                  background: "black",
+                  color: "white",
+                  marginLeft: "20px",
+                }}
+              />
+            )}
           </Flex>
         </Flex>
 

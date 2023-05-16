@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Pagination from "../../Components/Pagination/Pagination";
-import { dummyMyCollectionsData } from "../../data";
 import { animation } from "../../utils/animation";
 import SetCarForSaleModal from "../../Components/Modals/SetCarForSaleModal";
 
@@ -25,23 +24,9 @@ import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 
 const MyCollections = () => {
-  // const [editCarId, setEditCarId] = useState(null);
-  // const [deleteCarId, setDeleteCarId] = useState(null);
-
   const navigate = useNavigate();
   const [PriceCarId, setPriceCarId] = useState(null);
   const [myCars, setMyCars] = useState([]);
-
-  // const {
-  //   isOpen: isEditCarModalOpen,
-  //   onOpen: onEditCarModalOpen,
-  //   onClose: onEditCarModalClose,
-  // } = useDisclosure();
-  // const {
-  //   isOpen: isDeleteCarModalOpen,
-  //   onOpen: onDeleteCarModalOpen,
-  //   onClose: onDeleteCarModalClose,
-  // } = useDisclosure();
 
   const {
     isOpen: isPriceSetOpen,
@@ -49,43 +34,7 @@ const MyCollections = () => {
     onClose: onPriceSetClose,
   } = useDisclosure();
 
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // const handleEditClick = (carId) => {
-  //   setEditCarId(carId);
-  //   onEditCarModalOpen();
-  // };
-
-  // const handleDeleteClick = (carId) => {
-  //   setDeleteCarId(carId);
-  //   onDeleteCarModalOpen();
-  // };
-
-  const handlePriceSetClick = async (carId) => {
-    console.log("carId: ", Number(carId));
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-    const signer = provider.getSigner();
-
-    const contract = new ethers.Contract(
-      FileStorageMarketplace.address,
-      FileStorageMarketplace.abi,
-      signer
-    );
-
-    const carForSale = await contract.setCarForSale(carId);
-
-    const receipt = await carForSale.wait(); // Wait for the transaction to be mined
-
-    if (receipt.status === 1) {
-      // Transaction successful
-      toast.success("Car on sale now!");
-      navigate("/cars_for_sale");
-    } else {
-      // Transaction failed
-      toast.error("Transaction Failed");
-    }
-  };
+  const [currentPage, setCurrentPage] = useState(1); //Pagination Logic
 
   const itemsPerPage = 10;
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -93,12 +42,37 @@ const MyCollections = () => {
   const currentItems = myCars.slice(indexOfFirstItem, indexOfLastItem);
   const showPagination = myCars.length > itemsPerPage ? true : false;
 
+  const handlePriceSetClick = async (carId) => {
+    // Connecting to Blockchain
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      FileStorageMarketplace.address,
+      FileStorageMarketplace.abi,
+      signer
+    );
+
+    // Calling Smart Contrat Function
+    const carForSale = await contract.setCarForSale(carId);
+
+    const receipt = await carForSale.wait(); // Wait for the transaction to be mined
+
+    if (receipt.status === 1) {
+      toast.success("Car on sale now!");
+      navigate("/cars_for_sale");
+    } else {
+      toast.error("Transaction Failed");
+    }
+  };
+
+  const Click = (Hash) => {
+    window.open(`https://gateway.pinata.cloud/ipfs/${Hash}`, "_blank");
+  };
+
   useEffect(() => {
     const FetchMyCars = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-
       const signer = provider.getSigner();
-
       const contract = new ethers.Contract(
         FileStorageMarketplace.address,
         FileStorageMarketplace.abi,
@@ -106,8 +80,6 @@ const MyCollections = () => {
       );
 
       const fetchCars = await contract.getMyCars();
-
-      console.log("fetchCars: ", fetchCars);
 
       // Set the files state variable
       setMyCars(fetchCars);
@@ -167,7 +139,7 @@ const MyCollections = () => {
                         <Link
                           fontWeight="light"
                           fontSize="sm"
-                          //   onClick={() => click(data.carHash)}
+                          onClick={() => Click(data.carHash)}
                           isExternal
                         >
                           {data.link.slice(0, 20) +
@@ -198,26 +170,6 @@ const MyCollections = () => {
             </Tbody>
           </Table>
         </TableContainer>
-
-        {/* Edit Card Modal */}
-        {/* {editCarId && (
-          <EditCarModal
-            isOpen={isEditCarModalOpen}
-            onOpen={onEditCarModalOpen}
-            onClose={onEditCarModalClose}
-            carId={editCarId}
-          />
-        )} */}
-
-        {/* Delete Card Modal */}
-        {/* {deleteCarId && (
-          <DeleteCarModal
-            isOpen={isDeleteCarModalOpen}
-            onOpen={onDeleteCarModalOpen}
-            onClose={onDeleteCarModalClose}
-            carId={deleteCarId}
-          />
-        )} */}
 
         {/* Price Set Card Modal */}
         {PriceCarId && (

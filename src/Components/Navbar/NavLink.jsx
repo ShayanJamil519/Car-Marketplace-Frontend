@@ -4,7 +4,6 @@ import { Box } from "@chakra-ui/react";
 const NavLink = ({ data }) => (
   <Box
     as={Link}
-    // px={2}
     py={1}
     fontSize="xl"
     position="relative"

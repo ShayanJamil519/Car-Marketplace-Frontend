@@ -9,27 +9,19 @@ import {
   Th,
   Td,
   Link,
-  useDisclosure,
   Box,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Pagination from "../../Components/Pagination/Pagination";
-import { dummySoldCarsData } from "../../data";
 import { animation } from "../../utils/animation";
 
-import { toast } from "react-toastify";
 import FileStorageMarketplace from "../../CarMarketplace.json";
 import { ethers } from "ethers";
-import { useNavigate } from "react-router-dom";
 
 const SoldCars = () => {
-  const navigate = useNavigate();
-
   const [soldCars, setSoldCars] = useState([]);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 10;
@@ -51,8 +43,6 @@ const SoldCars = () => {
       );
 
       const soldCars = await contract.getAllSoldFile();
-
-      console.log("soldCars: ", soldCars);
 
       // Set the files state variable
       setSoldCars(soldCars);
@@ -151,5 +141,3 @@ const SoldCars = () => {
 };
 
 export default SoldCars;
-
-

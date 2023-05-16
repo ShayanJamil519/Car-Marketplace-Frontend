@@ -12,18 +12,20 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import DeleteCarModal from "../../Modals/DeleteCarModal";
-import EditCarModal from "../../Modals/EditCarModal";
+import RemoveCarModal from "../Modals/RemoveCarModal";
+import EditCarModal from "../Modals/EditCarModal";
 import { ethers } from "ethers";
 
 import { toast } from "react-toastify";
-import FileStorageMarketplace from "../../../CarMarketplace.json";
+import FileStorageMarketplace from "../../CarMarketplace.json";
 import { useNavigate } from "react-router-dom";
+import { useAddress } from "@thirdweb-dev/react";
 
 const Car = (props) => {
   const navigate = useNavigate();
-  const [editCarId, setEditCarId] = useState(null);
-  const [deleteCarId, setDeleteCarId] = useState(null);
+  const account = useAddress(); // getting connect account address
+  const [editCarId, setEditCarId] = useState(null); // edit car modal id state
+  const [removeCarId, setRemoveCarId] = useState(null); // Remove car modal id state
 
   const {
     isOpen: isEditCarModalOpen,
@@ -31,30 +33,36 @@ const Car = (props) => {
     onClose: onEditCarModalClose,
   } = useDisclosure();
   const {
-    isOpen: isDeleteCarModalOpen,
-    onOpen: onDeleteCarModalOpen,
-    onClose: onDeleteCarModalClose,
+    isOpen: isRemoveCarModalOpen,
+    onOpen: onRemoveCarModalOpen,
+    onClose: onRemoveCarModalClose,
   } = useDisclosure();
 
+  // Opens Edit Car Modal
   const handleEditClick = (carId) => {
     setEditCarId(carId);
     onEditCarModalOpen();
-    console.log("carId: ", Number(carId));
   };
 
-  const handleDeleteClick = (carId) => {
-    setDeleteCarId(carId);
-    onDeleteCarModalOpen();
+  // Opens Remove Car Modal
+  const handleRemoveClick = (carId) => {
+    setRemoveCarId(carId);
+    onRemoveCarModalOpen();
   };
 
   const handleBuy = async (carId, carPrice) => {
-    console.log("carId: ", Number(carId));
-    console.log("carPrice: ", Number(carPrice));
+    // If you are the car owner then you can't buy your own file
+    if (carOwner === account) {
+      toast.error("You can't buy your own file");
+      return;
+    }
+
+    // Formatting ether price
     let price = ethers.utils.formatEther(carPrice).toString();
+
+    // Connecting to Blockchain
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-
     const signer = provider.getSigner();
-
     const contract = new ethers.Contract(
       FileStorageMarketplace.address,
       FileStorageMarketplace.abi,
@@ -64,6 +72,7 @@ const Car = (props) => {
     carPrice = ethers.utils.parseEther(price);
     const walletAddress = await signer.getAddress();
 
+    // Calling Smart Contrat Function
     const tx = await contract.buyCar(carId, {
       from: walletAddress,
       value: carPrice._hex,
@@ -71,33 +80,24 @@ const Car = (props) => {
 
     const receipt = await tx.wait();
     if (receipt.status === 1) {
-      // Transaction successful
       toast.success("Car details edited!");
       navigate("/my_collections");
     } else {
-      // Transaction failed
       toast.error("Transaction Failed");
     }
   };
 
-  const {
-    onOpen,
-    carId,
-    carName,
-    carDescription,
-    carOwner,
-    carHash,
-    carPrice,
-  } = props;
+  const { carId, carName, carDescription, carOwner, carHash, carPrice } = props;
 
   return (
     <Card>
       <Image
-        src="./hero.jpg"
+        src={`https://gateway.pinata.cloud/ipfs/${carHash}`}
         alt="image"
+        width={"100%"}
         roundedTop="lg"
-        minHeight="200px"
-        objectFit="contain"
+        maxHeight="150px"
+        objectFit="cover"
       />
       <CardHeader
         display="flex"
@@ -133,10 +133,9 @@ const Car = (props) => {
             {" "}
             Owner:{" "}
           </Text>
-          {/* {carOwner === account
-              ? "YOU"
-              : `${carOwner.slice(0, 16)}....${carOwner.slice(-4)}`} */}
-          {carOwner.slice(0, 16)}....${carOwner.slice(-4)}
+          {carOwner === account
+            ? "YOU"
+            : `${carOwner.slice(0, 20)}....${carOwner.slice(-10)}`}
         </Text>
 
         <Text
@@ -153,7 +152,7 @@ const Car = (props) => {
             href={`https://gateway.pinata.cloud/ipfs/${carHash}`}
             isExternal
           >
-            {carHash.slice(0, 15) + "..." + carHash.slice(-5)}{" "}
+            {carHash.slice(0, 25) + "..." + carHash.slice(-10)}{" "}
             <ExternalLinkIcon mx="2px" />
           </Link>
         </Text>
@@ -179,31 +178,36 @@ const Car = (props) => {
         >
           Buy Car
         </Button>
-        <Button
-          onClick={() => handleEditClick(carId)}
-          colorScheme="teal"
-          backgroundColor="#2f79c5"
-          size="md"
-          width="100%"
-          marginRight={"40px"}
-          _hover={{
-            backgroundColor: "#267ed9",
-          }}
-        >
-          Edit
-        </Button>
 
-        <Button
-          onClick={() => handleDeleteClick(carId)}
-          colorScheme="red"
-          width="100%"
-          size="md"
-          _hover={{
-            backgroundColor: "red.400",
-          }}
-        >
-          Remove
-        </Button>
+        {carOwner === account && (
+          <>
+            <Button
+              onClick={() => handleEditClick(carId)}
+              colorScheme="teal"
+              backgroundColor="#2f79c5"
+              size="md"
+              width="100%"
+              marginRight={"40px"}
+              _hover={{
+                backgroundColor: "#267ed9",
+              }}
+            >
+              Edit
+            </Button>
+
+            <Button
+              onClick={() => handleRemoveClick(carId)}
+              colorScheme="red"
+              width="100%"
+              size="md"
+              _hover={{
+                backgroundColor: "red.400",
+              }}
+            >
+              Remove
+            </Button>
+          </>
+        )}
       </CardFooter>
       {/* Edit Card Modal */}
       {editCarId && (
@@ -215,13 +219,13 @@ const Car = (props) => {
         />
       )}
 
-      {/* Delete Card Modal */}
-      {deleteCarId && (
-        <DeleteCarModal
-          isOpen={isDeleteCarModalOpen}
-          onOpen={onDeleteCarModalOpen}
-          onClose={onDeleteCarModalClose}
-          carId={deleteCarId}
+      {/* Remove Card Modal */}
+      {removeCarId && (
+        <RemoveCarModal
+          isOpen={isRemoveCarModalOpen}
+          onOpen={onRemoveCarModalOpen}
+          onClose={onRemoveCarModalClose}
+          carId={removeCarId}
         />
       )}
     </Card>

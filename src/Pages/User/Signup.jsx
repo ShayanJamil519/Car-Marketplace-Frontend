@@ -8,7 +8,6 @@ import {
   InputRightElement,
   Stack,
   Button,
-  Heading,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -17,14 +16,22 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../utils/AuthProvider";
 import { animation } from "../../utils/animation";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const { login } = useContext(AuthContext);
 
   const handleAuthentication = (event) => {
+    if (!email || !password || !username) {
+      toast.error("Please enter all fields");
+      return;
+    }
     event.preventDefault();
     login();
     navigate("/");
@@ -62,13 +69,27 @@ export default function Signup() {
           <Stack spacing={4}>
             <FormControl id="username" isRequired>
               <FormLabel>Username</FormLabel>
-              <Input type="text" />
+              <Input
+                type="text"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+              />
             </FormControl>
-            <FormControl id="email" isRequired>
+            <FormControl
+              id="email"
+              isRequired
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            >
               <FormLabel>Email address</FormLabel>
               <Input type="email" />
             </FormControl>
-            <FormControl id="password" isRequired>
+            <FormControl
+              id="password"
+              isRequired
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            >
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input type={showPassword ? "text" : "password"} />

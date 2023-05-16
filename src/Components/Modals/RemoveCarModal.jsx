@@ -15,18 +15,14 @@ import { useNavigate } from "react-router-dom";
 
 import { ethers } from "ethers";
 
-export default function DeleteCarModal(props) {
+export default function RemoveCarModal(props) {
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose, carId } = props;
+  const { isOpen, onClose, carId } = props;
   const cancelRef = React.useRef();
 
   const handleCarRemove = async () => {
-    // console.log({ name, description, price: ethers.utils.parseEther(price) });
-
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-
     const signer = provider.getSigner();
-
     const contract = new ethers.Contract(
       FileStorageMarketplace.address,
       FileStorageMarketplace.abi,
@@ -38,11 +34,9 @@ export default function DeleteCarModal(props) {
     const receipt = await removeCar.wait(); // Wait for the transaction to be mined
 
     if (receipt.status === 1) {
-      // Transaction successful
       toast.success("Car removed from market successfully!");
       navigate("/my_collections");
     } else {
-      // Transaction failed
       toast.error("Transaction Failed");
     }
   };
