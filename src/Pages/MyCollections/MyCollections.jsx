@@ -35,7 +35,6 @@ const MyCollections = () => {
   } = useDisclosure();
 
   const [currentPage, setCurrentPage] = useState(1); //Pagination Logic
-
   const itemsPerPage = 10;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -65,8 +64,8 @@ const MyCollections = () => {
     }
   };
 
-  const Click = (Hash) => {
-    window.open(`https://gateway.pinata.cloud/ipfs/${Hash}`, "_blank");
+  const Click = (link) => {
+    window.open(`https://gateway.pinata.cloud/ipfs/${link}`, "_blank");
   };
 
   useEffect(() => {
@@ -126,7 +125,7 @@ const MyCollections = () => {
               {currentItems.length === 0 ? (
                 <Tr>
                   <Text fontSize="3xl" textAlign="center" paddingY={10}>
-                    There is no sar sold uptill now
+                    There is no car in your collection
                   </Text>
                 </Tr>
               ) : (
@@ -139,7 +138,7 @@ const MyCollections = () => {
                         <Link
                           fontWeight="light"
                           fontSize="sm"
-                          onClick={() => Click(data.carHash)}
+                          onClick={() => Click(data.link)}
                           isExternal
                         >
                           {data.link.slice(0, 20) +

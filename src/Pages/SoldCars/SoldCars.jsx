@@ -30,6 +30,10 @@ const SoldCars = () => {
   const currentItems = soldCars.slice(indexOfFirstItem, indexOfLastItem);
   const showPagination = soldCars.length > itemsPerPage ? true : false;
 
+  const Click = (link) => {
+    window.open(`https://gateway.pinata.cloud/ipfs/${link}`, "_blank");
+  };
+
   useEffect(() => {
     const FetchSoldCars = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -103,7 +107,7 @@ const SoldCars = () => {
                         <Link
                           fontWeight="light"
                           fontSize="sm"
-                          //   onClick={() => click(data.carHash)}
+                          onClick={() => Click(data.link)}
                           isExternal
                         >
                           {data.link.slice(0, 20) +
