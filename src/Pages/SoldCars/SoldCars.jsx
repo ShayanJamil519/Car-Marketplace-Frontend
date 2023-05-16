@@ -152,7 +152,4 @@ const SoldCars = () => {
 
 export default SoldCars;
 
-// <Td>{`${data?.oldOwner[0]?.slice(
-//                         0,
-//                         16
-//                       )}....${data?.oldOwner[0]?.slice(-8)}`}</Td>
+

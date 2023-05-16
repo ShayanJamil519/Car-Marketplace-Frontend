@@ -30,10 +30,6 @@ function App() {
           <Route path="/my_collections" element={<MyCollections />} />
         </Routes>
       </AuthProvider>
-
-      {/* <Routes>
-        <Route exact path="/" element={<Home />} />
-      </Routes> */}
     </div>
   );
 }
