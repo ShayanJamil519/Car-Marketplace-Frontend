@@ -7,9 +7,16 @@ import {
   Stack,
   Image,
   Text,
+  Button,
+  Menu,
+  MenuButton,
+  Avatar,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavLink from "./NavLink";
 import NavButtons from "./NavButtons";
 import { AuthContext } from "../../utils/AuthProvider";
@@ -37,8 +44,14 @@ const Links = [
 ];
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoggedIn, logout } = useContext(AuthContext); // getting loggedin state from auth context
+
+  const handleLogout = () => {
+    navigate("/");
+    logout();
+  };
 
   return (
     <>
@@ -93,22 +106,41 @@ export default function Navbar() {
             )}
           </HStack>
           <Flex alignItems={"center"}>
-            <NavButtons
-              isMobileScreen={false}
-              isLoggedIn={isLoggedIn}
-              logout={logout}
-            />
-            {isLoggedIn && (
-              <ConnectWallet
-                accentColor="#f213a4"
-                colorMode="dark"
-                width={{ base: "150px", md: "unset" }}
-                style={{
-                  background: "black",
-                  color: "white",
-                  marginLeft: "20px",
-                }}
-              />
+            {!isLoggedIn ? (
+              <NavButtons isMobileScreen={false} />
+            ) : (
+              <>
+                <ConnectWallet
+                  accentColor="#f213a4"
+                  colorMode="dark"
+                  width={{ base: "150px", md: "unset" }}
+                  style={{
+                    background: "black",
+                    color: "white",
+                    marginRight: "20px",
+                  }}
+                />
+
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"link"}
+                    cursor={"pointer"}
+                    minW={0}
+                    marginLeft={{ base: "0em", md: "0.5em" }}
+                  >
+                    <Avatar size={"lg"} src={"/profile.png"} />
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem onClick={() => navigate("/update_profile")}>
+                      Profile Settings
+                    </MenuItem>
+                    <MenuDivider />
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              </>
             )}
           </Flex>
         </Flex>

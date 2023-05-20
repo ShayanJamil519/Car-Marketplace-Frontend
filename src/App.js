@@ -1,12 +1,11 @@
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import { Route, Routes } from "react-router-dom";
-
-import Navbar from "./Components/Navbar/Navbar";
+import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./utils/AuthProvider";
 import Login from "./Pages/User/Login";
-import { Route, Routes } from "react-router-dom";
+import Navbar from "./Components/Navbar/Navbar";
 import Signup from "./Pages/User/Signup";
+import UpdateProfile from "./Pages/User/UpdateProfile";
 import Home from "./Pages/Home/Home";
 import CarsForSale from "./Pages/CarsForSale/CarsForSale";
 import AddCar from "./Pages/AddCar/AddCar";
@@ -24,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/update_profile" element={<UpdateProfile />} />
           <Route path="/cars_for_sale" element={<CarsForSale />} />
           <Route path="/add_car" element={<AddCar />} />
           <Route path="/sold_cars" element={<SoldCars />} />
