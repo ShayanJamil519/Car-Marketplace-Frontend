@@ -1,8 +1,6 @@
 ## Demo
 https://youtu.be/76LrfNQATzE
 
-</br>
-
 ## Inspiration
 
 The inspiration behind developing a decentralized car marketplace was to revolutionize the car buying and selling process, simplifying it and empowering individuals to manage their transactions in a transparent manner. Our goal was to eliminate the need for intermediaries and paperwork, reducing costs and fostering trust among users.
